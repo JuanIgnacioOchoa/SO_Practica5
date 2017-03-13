@@ -3,17 +3,15 @@
 #include <stdlib.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
-#include <asm/system.h>
-#include <asm/atomic.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <fcntl.h>
 
-#include <sys/wait.h>
-#include <sys/time.h>
+#include "semaphore.h"
 
 #define CICLOS 10
 
 char *pais[3] = {"Peru", "Bolivia", "Colombia"};
-
-
 
 void proceso(int i, int segment_id) {
 	SEMAFORO *sem = shmat(segment_id,NULL,0);
@@ -38,7 +36,6 @@ void proceso(int i, int segment_id) {
 int main(int argc, char const *argv[])
 {
 	SEMAFORO *sem;
-	initsem(sem, 1);
 	int segment_id = shmget(IPC_PRIVATE, sizeof(sem), S_IRUSR | S_IWUSR);
 	pid_t tid[3];
 
@@ -48,6 +45,7 @@ int main(int argc, char const *argv[])
 	void *thread_result;
 	srand(getpid());
 	sem = shmat(segment_id, NULL, 0);
+	initsem(sem, 1);
 	//Implementación de Semáforos.
 	//Sistemas Operativos, Primavera 2017
 	// Crea los procesos
