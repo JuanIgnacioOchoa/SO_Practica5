@@ -55,7 +55,12 @@ int main(int argc, char const *argv[])
 		res = pthread_create(&tid[i], NULL, proceso, (void *) &args[i]);
 	}
 	// Espera que terminen los hilos
+	printf("debug 0\n");
 	for(i=0;i<3;i++)
+	{
+		printf("debug 2\n");
 		res = pthread_join(tid[i], &thread_result);
+	}
+	printf("debug 1\n");
 	return 0;
 }

@@ -35,7 +35,7 @@ void proceso(int i, int segment_id) {
 
 int main(int argc, char const *argv[])
 {
-	SEMAFORO *sem;
+	SEMAFORO **sem;
 	int segment_id = shmget(IPC_PRIVATE, sizeof(sem), S_IRUSR | S_IWUSR);
 	pid_t tid[3];
 
@@ -45,7 +45,7 @@ int main(int argc, char const *argv[])
 	void *thread_result;
 	srand(getpid());
 	sem = shmat(segment_id, NULL, 0);
-	initsem(sem, 1);
+	*(sem) = initsem(1);
 	//Implementación de Semáforos.
 	//Sistemas Operativos, Primavera 2017
 	// Crea los procesos
