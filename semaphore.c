@@ -26,6 +26,7 @@ typedef struct _QUEUE {
 typedef struct _semaforo
 {
 	int count;
+	QUEUE *waiting_queue = NULL;
 } SEMAFORO;
 
 void _initqueue(QUEUE *q)
