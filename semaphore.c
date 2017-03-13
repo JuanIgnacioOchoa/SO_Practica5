@@ -54,30 +54,31 @@ int _dequeue(QUEUE *q)
 	return(valret);
 }
 
-void waitsem(Semaforo sem) 
+void waitsem(Semaforo *sem) 
 {
-	*sem.count--;
+	sem->count--;
 	if(sem.count < 0)
 	{
 		// agregar proceso a la cola de bloqueados
-		// KILL PID SIGCONT
-		
+		// KILL PID SIGSTOP
+		_enqueue(sem->waiting_queue, getpid())
+		kill(getpid(), SIGSTOP);
 	}
 	return;
 }
 
-void signalsem(Semaforo sem) 
+void signalsem(Semaforo *sem) 
 {
-	*sem.count++;
+	sem->count++;
 	if(sem.count <= 0)
 	{
 		//quitar de la cola de bloqueado y agregar a la de listos
-		// KILL PID, SIGSTOP
+		// KILL PID, SIGCONT
 	}
 	return
 }
 
 Semaforo initsem(Semaforo *sem, int count)
 {
-	sem.count = count;
+	*sem.count = count;
 }

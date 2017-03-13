@@ -41,22 +41,22 @@ void proceso(int i) {
 int main(int argc, char const *argv[])
 {
 	initsem(sem, 1);
-	pthread_t tid[3];
+	pid_t tid[3];
 	int res;
 	int args[3];
 	int i;
 	void *thread_result;
 	srand(getpid());
-	3Implementación de Semáforos.
-	Sistemas Operativos, Primavera 2017
+	//Implementación de Semáforos.
+	//Sistemas Operativos, Primavera 2017
 	// Crea los hilos
 	for(i=0;i<3;i++)
 	{
-	args[i]=i;
-	res = pthread_create(&tid[i], NULL, hilo1, (void *) &args[i]);
+		args[i]=i;
+		res = pthread_create(&tid[i], NULL, hilo1, (void *) &args[i]);
 	}
 	// Espera que terminen los hilos
 	for(i=0;i<3;i++)
-	res = pthread_join(tid[i], &thread_result);
+		res = pthread_join(tid[i], &thread_result);
 	return 0;
 }
