@@ -15,15 +15,44 @@
 									: "m" (B), "ir" (A)		\
 									);
 #define CICLOS 10
+#define MAXQUEUE 20
 
-char *pais[3] = {"Peru", "Bolivia", "Colombia"};
+typedef struct _QUEUE {
+	int elements[MAXQUEUE];
+	int head;
+	int tail;
+} QUEUE;
 
-int *g;
-
-struct Semaforo
+typedef struct _semaforo
 {
 	int count;
-};
+	QUEUE *waiting_queue = NULL;
+} SEMAFORO;
+
+void _initqueue(QUEUE *q)
+{
+	q->head=0;
+	q->tail=0;
+}
+
+void _enqueue(QUEUE *q,int val)
+{
+	q->elements[q->head]=val;
+	// Incrementa al apuntador
+	q->head++;
+	q->head=q->head%MAXQUEUE;
+}
+
+
+int _dequeue(QUEUE *q)
+{
+	int valret;
+	valret=q->elements[q->tail];
+	// Incrementa al apuntador
+	q->tail++;
+	q->tail=q->tail%MAXQUEUE;
+	return(valret);
+}
 
 void waitsem(Semaforo sem) 
 {
