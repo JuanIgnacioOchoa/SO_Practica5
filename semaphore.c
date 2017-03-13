@@ -72,13 +72,17 @@ void signalsem(Semaforo *sem)
 	sem->count++;
 	if(sem->count <= 0)
 	{
-		pid_t next = sem->waiting_queue->_dequeue();
+		pid_t next = _dequeue(sem->waiting_queue);
 		kill(next, SIGCONT);
 	}
 	return;
 }
 
-Semaforo initsem(Semaforo *sem, int count)
+void initsem(Semaforo *sem, int count)
 {
-	sem.count = count;
+	sem = (SEMAFORO *)malloc(sizeof(SEMAFORO));
+	sem->count = count;
+	sem->waiting_queue = (QUEUE *)malloc(sizeof(QUEUE));
+	_initqueue(sem->waiting_queue);
+	return;
 }
