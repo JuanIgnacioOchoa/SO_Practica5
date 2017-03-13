@@ -31,6 +31,8 @@ void waitsem(Semaforo sem)
 	if(sem.count < 0)
 	{
 		// agregar proceso a la cola de bloqueados
+		// KILL PID SIGCONT
+		
 	}
 	return;
 }
@@ -41,11 +43,12 @@ void signalsem(Semaforo sem)
 	if(sem.count <= 0)
 	{
 		//quitar de la cola de bloqueado y agregar a la de listos
+		// KILL PID, SIGSTOP
 	}
 	return
 }
 
-Semaforo initsem(Semaforo *sem)
+Semaforo initsem(Semaforo *sem, int count)
 {
-
+	sem.count = count;
 }
