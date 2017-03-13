@@ -7,13 +7,14 @@
 #include <sys/wait.h>
 #include <sys/time.h>
 
+
 void _initqueue(QUEUE *q)
 {
 	q->head=0;
 	q->tail=0;
 }
 
-void _enqueue(QUEUE *q,int val)
+void _enqueue(QUEUE *q,pid_t val)
 {
 	q->elements[q->head]=val;
 	// Incrementa al apuntador
@@ -21,7 +22,7 @@ void _enqueue(QUEUE *q,int val)
 	q->head=q->head%MAXQUEUE;
 }
 
-int _dequeue(QUEUE *q)
+pid_t _dequeue(QUEUE *q)
 {
 	int valret;
 	valret=q->elements[q->tail];
@@ -34,14 +35,21 @@ int _dequeue(QUEUE *q)
 void waitsem(SEMAFORO *sem) 
 {
 	//printf("hola 6\n");
+	pthread_mutex_lock(&(sem->count_mutex));
 	sem->count--;
+	pthread_mutex_unlock(&(sem->count_mutex));
 	if(sem->count < 0)
 	{
 		printf("hola 7\n");
 		// agregar proceso a la cola de bloqueados
 		// KILL PID SIGSTOP
 		_enqueue(sem->waiting_queue, getpid());
-		kill(getpid(), SIGSTOP);
+
+		printf("hola pid      %d\n",getpid());
+		printf("hola _dequeue %d\n", _dequeue(sem->waiting_queue));
+		_enqueue(sem->waiting_queue,getpid());
+		
+		//kill(getpid(), SIGSTOP);
 
 	}
 	return;
@@ -49,7 +57,9 @@ void waitsem(SEMAFORO *sem)
 
 void signalsem(SEMAFORO *sem) 
 {
+	pthread_mutex_lock(&(sem->count_mutex));
 	sem->count++;
+	pthread_mutex_unlock(&(sem->count_mutex));
 
 	if(sem->count <= 0)
 	{

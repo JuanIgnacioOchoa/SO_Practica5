@@ -12,13 +12,14 @@ typedef struct _QUEUE {
 typedef struct _semaforo {
     int count;
     QUEUE *waiting_queue;
+    pthread_mutex_t count_mutex;
 } SEMAFORO;
 
 void _initqueue(QUEUE *q);
 
-void _enqueue(QUEUE *q, int val);
+void _enqueue(QUEUE *q, pid_t val);
 
-int _dequeue(QUEUE *q);
+pid_t _dequeue(QUEUE *q);
 
 void waitsem(SEMAFORO *sem);
 

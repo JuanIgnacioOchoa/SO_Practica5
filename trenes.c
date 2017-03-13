@@ -48,14 +48,15 @@ int main(int argc, char const *argv[])
 	//Implementación de Semáforos.
 	//Sistemas Operativos, Primavera 2017
 	// Crea los hilos
-	//printf("hola\n");
+	printf("hola pid2. %d\n",getpid());
 	for(i=0;i<3;i++)
 	{
+		printf("hola pid3. %d\n",getpid());
 		args[i]=i;
 		res = pthread_create(&tid[i], NULL, proceso, (void *) &args[i]);
 	}
 	// Espera que terminen los hilos
-	printf("debug 0\n");
+	//printf("debug 0\n");
 	for(i=0;i<3;i++)
 	{
 		printf("debug 2\n");
