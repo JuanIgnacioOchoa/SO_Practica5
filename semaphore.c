@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#include <signal.h>
 #include <asm/system.h>
 #include <asm/atomic.h>
 
@@ -18,9 +19,9 @@
 #define MAXQUEUE 20
 
 typedef struct _QUEUE {
-	int elements[MAXQUEUE];
-	int head;
-	int tail;
+	pid_t elements[MAXQUEUE];
+	pid_t head;
+	pid_t tail;
 } QUEUE;
 
 typedef struct _semaforo
@@ -60,21 +61,21 @@ void waitsem(Semaforo sem)
 	if(sem.count < 0)
 	{
 		// agregar proceso a la cola de bloqueados
-		// KILL PID SIGCONT
+		// KILL PID SIGSTOP
 		
 	}
 	return;
 }
 
-void signalsem(Semaforo sem) 
+void signalsem(Semaforo *sem) 
 {
-	*sem.count++;
-	if(sem.count <= 0)
+	sem->count++;
+	if(sem->count <= 0)
 	{
-		//quitar de la cola de bloqueado y agregar a la de listos
-		// KILL PID, SIGSTOP
+		pid_t next = sem->waiting_queue->_dequeue();
+		kill(next, SIGCONT);
 	}
-	return
+	return;
 }
 
 Semaforo initsem(Semaforo *sem, int count)
