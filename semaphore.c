@@ -33,9 +33,11 @@ int _dequeue(QUEUE *q)
 
 void waitsem(SEMAFORO *sem) 
 {
+	//printf("hola 6\n");
 	sem->count--;
 	if(sem->count < 0)
 	{
+		printf("hola 7\n");
 		// agregar proceso a la cola de bloqueados
 		// KILL PID SIGSTOP
 		_enqueue(sem->waiting_queue, getpid());
@@ -57,11 +59,12 @@ void signalsem(SEMAFORO *sem)
 	return;
 }
 
-void initsem(SEMAFORO *sem, int count)
-{
+SEMAFORO* initsem(int count)
+{	
+	SEMAFORO *sem;
 	sem = (SEMAFORO *)malloc(sizeof(SEMAFORO));
 	sem->count = count;
 	sem->waiting_queue = (QUEUE *)malloc(sizeof(QUEUE));
 	_initqueue(sem->waiting_queue);
-	return;
+	return sem;
 }

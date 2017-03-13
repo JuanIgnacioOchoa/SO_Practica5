@@ -15,10 +15,13 @@ void *proceso(void *arg) {
 
 	int i = *((int *)arg);
 	int k;
+	//printf("hola 1\n");
 	for(k=0;k<CICLOS;k++)
 	{
 		// Llamada waitsem implementada en la parte 3
+		//printf("hola 5\n");
 		waitsem(sem);
+		//printf("hola 2\n");
 		printf("Entra %s ",pais[i]);
 		fflush(stdout);
 		sleep(rand()%3);
@@ -28,13 +31,14 @@ void *proceso(void *arg) {
 		// Espera aleatoria fuera de la sección crítica
 		sleep(rand()%3);
 	}
+	//printf("hola 3\n");
 	exit(0);
 	// Termina el proceso
 }
 
 int main(int argc, char const *argv[])
 {
-	initsem(sem, 1);
+	sem = initsem(1);
 	pthread_t tid[3];
 	int res;
 	int args[3];
@@ -44,6 +48,7 @@ int main(int argc, char const *argv[])
 	//Implementación de Semáforos.
 	//Sistemas Operativos, Primavera 2017
 	// Crea los hilos
+	//printf("hola\n");
 	for(i=0;i<3;i++)
 	{
 		args[i]=i;

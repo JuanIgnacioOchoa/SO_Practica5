@@ -24,6 +24,6 @@ void waitsem(SEMAFORO *sem);
 
 void signalsem(SEMAFORO *sem);
 
-void initsem(SEMAFORO *sem, int count);
+SEMAFORO* initsem(int count);
 
 #endif
