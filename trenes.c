@@ -19,30 +19,6 @@
 char *pais[3] = {"Peru", "Bolivia", "Colombia"};
 int *g;
 
-struct Semaforo
-{
-	atomic_t count;
-	int sleepers;
-	wait_queue_head_t wait;
-};
-
-void waitsem(Semaforo *sem) 
-{
-	*(sem.count)--;
-	return;
-}
-
-void signalsem(Semaforo *sem) 
-{
-	*(sem.count)++;
-	return
-}
-
-Semaforo initsem(Semaforo *in) 
-{
-	in.count = 0;
-}
-
 void proceso(int i) {
 	int k;
 	for(k=0;k<CICLOS;k++)
