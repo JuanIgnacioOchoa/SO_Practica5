@@ -20,19 +20,24 @@ void *proceso(void *arg) {
 	{
 		// Llamada waitsem implementada en la parte 3
 		//printf("hola 5\n");
+		
+		pthread_mutex_lock(&(sem->count_mutex));
 		waitsem(sem);
+		pthread_mutex_unlock(&(sem->count_mutex));
 		//printf("hola 2\n");
 		printf("Entra %s ",pais[i]);
 		fflush(stdout);
 		sleep(rand()%3);
 		printf("- %s Sale\n",pais[i]);
 		// Llamada waitsignal implementada en la parte 3
+		pthread_mutex_lock(&(sem->count_mutex));
 		signalsem(sem);
+		pthread_mutex_unlock(&(sem->count_mutex));
 		// Espera aleatoria fuera de la sección crítica
 		sleep(rand()%3);
 	}
 	//printf("hola 3\n");
-	exit(0);
+	//exit(0);
 	// Termina el proceso
 }
 

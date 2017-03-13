@@ -19,13 +19,17 @@ void proceso(int i, int segment_id) {
 	for(k=0;k<CICLOS;k++)
 	{
 		// Llamada waitsem implementada en la parte 3
+		pthread_mutex_lock(&(sem->count_mutex));
 		waitsem(sem);
+		pthread_mutex_unlock(&(sem->count_mutex));
 		printf("Entra %s ",pais[i]);
 		fflush(stdout);
 		sleep(rand()%3);
 		printf("- %s Sale\n",pais[i]);
 		// Llamada waitsignal implementada en la parte 3
+		pthread_mutex_lock(&(sem->count_mutex));
 		signalsem(sem);
+		pthread_mutex_unlock(&(sem->count_mutex));
 		// Espera aleatoria fuera de la sección crítica
 		sleep(rand()%3);
 	}
@@ -57,8 +61,6 @@ int main(int argc, char const *argv[])
 			proceso(i, segment_id);
 		}
 	}
-	// Espera que terminen los hilos
-	for(i=0;i<3;i++)
-		res = pthread_join(tid[i], &thread_result);
+
 	return 0;
 }

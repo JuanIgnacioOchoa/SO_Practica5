@@ -4,15 +4,16 @@
 #define MAXQUEUE 20
 
 typedef struct _QUEUE {
-    pid_t elements[MAXQUEUE];
-    pid_t head;
-    pid_t tail;
+    int elements[MAXQUEUE];
+    int head;
+    int tail;
 } QUEUE;
 
 typedef struct _semaforo {
     int count;
     QUEUE *waiting_queue;
     pthread_mutex_t count_mutex;
+    pthread_mutex_t count2_mutex;
 } SEMAFORO;
 
 void _initqueue(QUEUE *q);

@@ -16,7 +16,7 @@ void _initqueue(QUEUE *q)
 
 void _enqueue(QUEUE *q,pid_t val)
 {
-	q->elements[q->head]=val;
+	q->elements[q->head]=(int)val;
 	// Incrementa al apuntador
 	q->head++;
 	q->head=q->head%MAXQUEUE;
@@ -29,27 +29,24 @@ pid_t _dequeue(QUEUE *q)
 	// Incrementa al apuntador
 	q->tail++;
 	q->tail=q->tail%MAXQUEUE;
-	return(valret);
+	return((pid_t)valret);
 }
 
 void waitsem(SEMAFORO *sem) 
 {
 	//printf("hola 6\n");
-	pthread_mutex_lock(&(sem->count_mutex));
 	sem->count--;
-	pthread_mutex_unlock(&(sem->count_mutex));
 	if(sem->count < 0)
 	{
-		printf("hola 7\n");
 		// agregar proceso a la cola de bloqueados
 		// KILL PID SIGSTOP
 		_enqueue(sem->waiting_queue, getpid());
-
-		printf("hola pid      %d\n",getpid());
-		printf("hola _dequeue %d\n", _dequeue(sem->waiting_queue));
-		_enqueue(sem->waiting_queue,getpid());
-		
-		//kill(getpid(), SIGSTOP);
+		printf("pid get %d\n",getpid());
+		if(kill(getpid(), SIGSTOP))
+		{
+			printf("error kill\n");
+			exit(0);
+		}
 
 	}
 	return;
@@ -57,14 +54,16 @@ void waitsem(SEMAFORO *sem)
 
 void signalsem(SEMAFORO *sem) 
 {
-	pthread_mutex_lock(&(sem->count_mutex));
-	sem->count++;
-	pthread_mutex_unlock(&(sem->count_mutex));
 
+	sem->count++;
 	if(sem->count <= 0)
 	{
 		pid_t next = _dequeue(sem->waiting_queue);
-		kill(next, SIGCONT);
+		if(kill(next, SIGCONT))
+		{
+			printf("error kill cont\n");
+			exit(0);
+		}
 	}
 	return;
 }
@@ -76,5 +75,10 @@ SEMAFORO* initsem(int count)
 	sem->count = count;
 	sem->waiting_queue = (QUEUE *)malloc(sizeof(QUEUE));
 	_initqueue(sem->waiting_queue);
+	if(pthread_mutex_init(&(sem->count_mutex),NULL)!=0)
+	{
+		printf("mutex failed\n");
+	}
+
 	return sem;
 }
