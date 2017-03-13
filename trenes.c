@@ -9,15 +9,11 @@
 #include <sys/wait.h>
 #include <sys/time.h>
 
-#define atomic_xchg(A,B) __asm__ __volatile__(\
-									"lock xchg %1,%0 ;\n"	\
-									: "=ir" (A)				\
-									: "m" (B), "ir" (A)		\
-									);
 #define CICLOS 10
 
 char *pais[3] = {"Peru", "Bolivia", "Colombia"};
-int *g;
+
+SEMAFORO sem;
 
 void proceso(int i) {
 	int k;
