@@ -55,7 +55,7 @@ int _dequeue(QUEUE *q)
 	return(valret);
 }
 
-void waitsem(Semaforo *sem) 
+void waitsem(SEMAFORO *sem) 
 {
 	sem->count--;
 	if(sem.count < 0)
@@ -69,7 +69,7 @@ void waitsem(Semaforo *sem)
 	return;
 }
 
-void signalsem(Semaforo *sem) 
+void signalsem(SEMAFORO *sem) 
 {
 	sem->count++;
 
@@ -81,7 +81,7 @@ void signalsem(Semaforo *sem)
 	return;
 }
 
-void initsem(Semaforo *sem, int count)
+void initsem(SEMAFORO *sem, int count)
 {
 	*sem.count = count;
 
