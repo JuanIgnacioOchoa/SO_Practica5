@@ -17,7 +17,6 @@
 #define CICLOS 10
 
 char *pais[3] = {"Peru", "Bolivia", "Colombia"};
-
 int *g;
 
 struct Semaforo
@@ -27,17 +26,22 @@ struct Semaforo
 	wait_queue_head_t wait;
 };
 
-void waitsem(Semaforo sem) {
-	sem.count--;
+void waitsem(Semaforo *sem) 
+{
+	*(sem.count)--;
 	return;
 }
 
-void signalsem(Semaforo sem) {
-	sem.count++;
+void signalsem(Semaforo *sem) 
+{
+	*(sem.count)++;
 	return
 }
 
-Semaforo initsem(in)
+Semaforo initsem(Semaforo *in) 
+{
+	in.count = 0;
+}
 
 void proceso(int i) {
 	int k;
