@@ -1,11 +1,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
 #include <signal.h>
-#include <asm/system.h>
-#include <asm/atomic.h>
 #include "semaphore.h"
 
 #include <sys/wait.h>
@@ -38,11 +34,11 @@ int _dequeue(QUEUE *q)
 void waitsem(SEMAFORO *sem) 
 {
 	sem->count--;
-	if(sem.count < 0)
+	if(sem->count < 0)
 	{
 		// agregar proceso a la cola de bloqueados
 		// KILL PID SIGSTOP
-		_enqueue(sem->waiting_queue, getpid())
+		_enqueue(sem->waiting_queue, getpid());
 		kill(getpid(), SIGSTOP);
 
 	}
@@ -63,12 +59,9 @@ void signalsem(SEMAFORO *sem)
 
 void initsem(SEMAFORO *sem, int count)
 {
-	*sem.count = count;
-
 	sem = (SEMAFORO *)malloc(sizeof(SEMAFORO));
 	sem->count = count;
 	sem->waiting_queue = (QUEUE *)malloc(sizeof(QUEUE));
 	_initqueue(sem->waiting_queue);
 	return;
-
 }

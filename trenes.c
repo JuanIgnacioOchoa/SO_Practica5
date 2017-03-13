@@ -1,12 +1,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#include <asm/system.h>
-#include <asm/atomic.h>
-#include <sys/wait.h>
-#include <sys/time.h>
+#include <pthread.h>
 
 #include "semaphore.h"
 
@@ -14,9 +9,11 @@
 
 char *pais[3] = {"Peru", "Bolivia", "Colombia"};
 
-SEMAFORO sem;
+SEMAFORO *sem;
 
-void proceso(int i) {
+void *proceso(void *arg) {
+
+	int i = *((int *)arg);
 	int k;
 	for(k=0;k<CICLOS;k++)
 	{
@@ -38,7 +35,7 @@ void proceso(int i) {
 int main(int argc, char const *argv[])
 {
 	initsem(sem, 1);
-	pid_t tid[3];
+	pthread_t tid[3];
 	int res;
 	int args[3];
 	int i;
@@ -50,7 +47,7 @@ int main(int argc, char const *argv[])
 	for(i=0;i<3;i++)
 	{
 		args[i]=i;
-		res = pthread_create(&tid[i], NULL, hilo1, (void *) &args[i]);
+		res = pthread_create(&tid[i], NULL, proceso, (void *) &args[i]);
 	}
 	// Espera que terminen los hilos
 	for(i=0;i<3;i++)

@@ -1,6 +1,6 @@
 #ifndef _semaphore_h
 #define _semaphore_h
-
+#include <pthread.h>
 #define MAXQUEUE 20
 
 typedef struct _QUEUE {
@@ -9,10 +9,9 @@ typedef struct _QUEUE {
     pid_t tail;
 } QUEUE;
 
-typedef struct _semaforo
-{
+typedef struct _semaforo {
     int count;
-    QUEUE *waiting_queue = NULL;
+    QUEUE *waiting_queue;
 } SEMAFORO;
 
 void _initqueue(QUEUE *q);
