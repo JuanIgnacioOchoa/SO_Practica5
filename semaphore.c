@@ -6,29 +6,10 @@
 #include <signal.h>
 #include <asm/system.h>
 #include <asm/atomic.h>
+#include "semaphore.h"
 
 #include <sys/wait.h>
 #include <sys/time.h>
-
-#define atomic_xchg(A,B) __asm__ __volatile__(\
-									"lock xchg %1,%0 ;\n"	\
-									: "=ir" (A)				\
-									: "m" (B), "ir" (A)		\
-									);
-#define CICLOS 10
-#define MAXQUEUE 20
-
-typedef struct _QUEUE {
-	pid_t elements[MAXQUEUE];
-	pid_t head;
-	pid_t tail;
-} QUEUE;
-
-typedef struct _semaforo
-{
-	int count;
-	QUEUE *waiting_queue = NULL;
-} SEMAFORO;
 
 void _initqueue(QUEUE *q)
 {
@@ -44,7 +25,6 @@ void _enqueue(QUEUE *q,int val)
 	q->head=q->head%MAXQUEUE;
 }
 
-
 int _dequeue(QUEUE *q)
 {
 	int valret;
@@ -55,7 +35,7 @@ int _dequeue(QUEUE *q)
 	return(valret);
 }
 
-void waitsem(Semaforo *sem) 
+void waitsem(SEMAFORO *sem) 
 {
 	sem->count--;
 	if(sem.count < 0)
@@ -69,7 +49,7 @@ void waitsem(Semaforo *sem)
 	return;
 }
 
-void signalsem(Semaforo *sem) 
+void signalsem(SEMAFORO *sem) 
 {
 	sem->count++;
 
@@ -81,7 +61,7 @@ void signalsem(Semaforo *sem)
 	return;
 }
 
-void initsem(Semaforo *sem, int count)
+void initsem(SEMAFORO *sem, int count)
 {
 	*sem.count = count;
 
