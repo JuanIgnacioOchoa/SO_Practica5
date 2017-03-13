@@ -5,9 +5,10 @@
 #include <sys/shm.h>
 #include <asm/system.h>
 #include <asm/atomic.h>
-
 #include <sys/wait.h>
 #include <sys/time.h>
+
+#include "semaphore.h"
 
 #define CICLOS 10
 
